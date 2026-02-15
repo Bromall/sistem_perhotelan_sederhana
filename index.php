@@ -1,32 +1,31 @@
 <?php
-include "../middleware/admin.php";
-include "../config/koneksi.php";
-
-// Hitung jumlah data
-$jml_kamar = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM kamar"))['total'];
-$jml_tamu  = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM users WHERE role='tamu'"))['total'];
-$jml_reservasi = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM reservasi"))['total'];
-$jml_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM reservasi WHERE status='menunggu'"))['total'];
+include "../middleware/tamu.php";
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Admin</title>
+    <title>Dashboard Tamu</title>
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
     <style>
-        body { background-color: #f5f6fa; }
-        .card-stat {
-            transition: .3s;
-            cursor: pointer;
+        body {
+            background-color: #f5f6fa;
         }
-        .card-stat:hover {
+        .card-menu {
+            transition: 0.3s;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+        .card-menu:hover {
             transform: scale(1.05);
-            box-shadow: 0px 10px 22px rgba(0,0,0,0.1);
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.12);
+        }
+        .icon-large {
+            font-size: 55px;
         }
     </style>
 </head>
@@ -34,94 +33,62 @@ $jml_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS tot
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-bold">🏨 Admin Panel</a>
+        <a class="navbar-brand fw-bold" href="#">
+            🏨 MyHotel — Dashboard Tamu
+        </a>
 
-        <div>
+        <div class="d-flex align-items-center">
             <span class="text-white me-3">
                 Halo, <b><?= $_SESSION['nama']; ?></b>
             </span>
-            <a href="../auth/logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+            <a href="../auth/logout.php" class="btn btn-outline-light btn-sm">
+                Logout
+            </a>
         </div>
     </div>
 </nav>
 
+<!-- MAIN CONTENT -->
 <div class="container mt-4">
 
-    <h3 class="mb-4">Dashboard Admin</h3>
+    <h3 class="mb-4 fw-bold">Menu Utama</h3>
 
-    <div class="row g-3">
+    <div class="row g-4">
 
-        <!-- KAMAR -->
-        <div class="col-md-3">
-            <div class="card card-stat bg-primary text-white p-3">
-                <h1>🛏</h1>
-                <h4><?= $jml_kamar; ?></h4>
-                <p>Kamar</p>
+        <!-- CARD LIHAT KAMAR -->
+        <div class="col-md-4">
+            <div class="card card-menu p-4 text-center h-100"
+                 onclick="window.location.href='kamar.php'">
+                <div class="icon-large">🛏</div>
+                <h5 class="mt-3 fw-bold">Lihat Kamar</h5>
+                <p class="text-muted">Cek seluruh kamar yang tersedia</p>
             </div>
         </div>
 
-        <!-- TAMU -->
-        <div class="col-md-3">
-            <div class="card card-stat bg-success text-white p-3">
-                <h1>👤</h1>
-                <h4><?= $jml_tamu; ?></h4>
-                <p>Tamu Terdaftar</p>
+        <!-- CARD RIWAYAT -->
+        <div class="col-md-4">
+            <div class="card card-menu p-4 text-center h-100"
+                 onclick="window.location.href='riwayat.php'">
+                <div class="icon-large">📜</div>
+                <h5 class="mt-3 fw-bold">Riwayat Reservasi</h5>
+                <p class="text-muted">Lihat histori pemesanan Anda</p>
             </div>
         </div>
 
-        <!-- RESERVASI -->
-        <div class="col-md-3">
-            <div class="card card-stat bg-warning text-dark p-3">
-                <h1>📋</h1>
-                <h4><?= $jml_reservasi; ?></h4>
-                <p>Total Reservasi</p>
-            </div>
-        </div>
-
-        <!-- MENUNGGU -->
-        <div class="col-md-3">
-            <div class="card card-stat bg-danger text-white p-3">
-                <h1>⏳</h1>
-                <h4><?= $jml_pending; ?></h4>
-                <p>Menunggu Konfirmasi</p>
+        <!-- CARD PROFIL -->
+        <div class="col-md-4">
+            <div class="card card-menu p-4 text-center h-100"
+                 onclick="window.location.href='profil.php'">
+                <div class="icon-large">👤</div>
+                <h5 class="mt-3 fw-bold">Profil Saya</h5>
+                <p class="text-muted">Lihat & perbarui data profil Anda</p>
             </div>
         </div>
 
     </div>
 
-    <!-- MENU -->
-    <div class="row mt-4">
-
-        <div class="col-md-4">
-            <a href="kamar.php" class="text-decoration-none">
-                <div class="card p-3 text-center">
-                    <h1>🛏</h1>
-                    <h5 class="fw-bold">Kelola Kamar</h5>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-4">
-            <a href="users.php" class="text-decoration-none">
-                <div class="card p-3 text-center">
-                    <h1>👥</h1>
-                    <h5 class="fw-bold">Kelola User / Tamu</h5>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-4">
-            <a href="reservasi.php" class="text-decoration-none">
-                <div class="card p-3 text-center">
-                    <h1>📜</h1>
-                    <h5 class="fw-bold">Kelola Reservasi</h5>
-                </div>
-            </a>
-        </div>
-
-    </div>
 </div>
 
 </body>

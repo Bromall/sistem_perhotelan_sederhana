@@ -1,51 +1,52 @@
 <?php
-include '../middleware/admin.php';
-include '../config/koneksi.php';
+include "../middleware/tamu.php";
+include "../config/koneksi.php";
 ?>
+
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Data Kamar</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Daftar Kamar</title>
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        .card:hover {
+            transform: scale(1.03);
+            transition: 0.3s;
+        }
+    </style>
 </head>
-<body class="p-4">
+<body class="bg-light">
 
-<h3>Data Kamar</h3>
-<a href="kamar_tambah.php" class="btn btn-primary mb-3">+ Tambah Kamar</a>
+<div class="container mt-5">
+    <h3 class="mb-4">🏨 Daftar Kamar</h3>
 
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>No</th>
-            <th>Nama Kamar</th>
-            <th>Tipe</th>
-            <th>Harga</th>
-            <th>Deskripsi</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
+
+    <div class="row">
+
         <?php
-        $no=1;
-        $kamar = mysqli_query($koneksi, "SELECT * FROM kamar ORDER BY id DESC");
-        while ($row = mysqli_fetch_assoc($kamar)) :
+        $data = mysqli_query($koneksi, "SELECT * FROM kamar ORDER BY id DESC");
+        while ($k = mysqli_fetch_assoc($data)) :
         ?>
-        <tr>
-            <td><?= $no++; ?></td>
-            <td><?= $row['nama_kamar']; ?></td>
-            <td><?= $row['tipe']; ?></td>
-            <td>Rp <?= number_format($row['harga']); ?></td>
-            <td><?= $row['deskripsi']; ?></td>
-            <td>
-                <a href="kamar_edit.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                <a href="kamar_hapus.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin hapus?')">Hapus</a>
-            </td>
-        </tr>
-        <?php endwhile; ?>
-    </tbody>
-</table>
-<a href="index.php" class="btn btn-secondary">⬅ Kembali</a>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= $k['nama_kamar']; ?></h5>
+                        <p class="text-muted">Tipe: <?= $k['tipe']; ?></p>
+                        <p><b>Rp <?= number_format($k['harga']); ?></b> / malam</p>
 
+                        <a href="pesan.php?id=<?= $k['id']; ?>" class="btn btn-primary w-100">
+                            Pesan Sekarang
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endwhile; ?>
+    </div>
+<a href="index.php" class="btn btn-secondary mb-3">⬅ Kembali</a>
+</div>
 
 </body>
 </html>
