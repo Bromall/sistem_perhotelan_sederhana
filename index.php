@@ -1,94 +1,60 @@
 <?php
-include "../middleware/tamu.php";
+session_start();
+
+// Jika sudah login, redirect
+if (isset($_SESSION['user'])) {
+    if ($_SESSION['user']['role'] == 'admin') {
+        header("Location: admin/index.php");
+    } else {
+        header("Location: user/index.php");
+    }
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Tamu</title>
-
-    <link rel="stylesheet" 
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
-    <style>
-        body {
-            background-color: #f5f6fa;
-        }
-        .card-menu {
-            transition: 0.3s;
-            cursor: pointer;
-            border-radius: 12px;
-        }
-        .card-menu:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.12);
-        }
-        .icon-large {
-            font-size: 55px;
-        }
-    </style>
+    <title>Login - Reservasi Hotel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#">
-            🏨 MyHotel — Dashboard Tamu
-        </a>
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-4">
 
-        <div class="d-flex align-items-center">
-            <span class="text-white me-3">
-                Halo, <b><?= $_SESSION['nama']; ?></b>
-            </span>
-            <a href="../auth/logout.php" class="btn btn-outline-light btn-sm">
-                Logout
-            </a>
-        </div>
-    </div>
-</nav>
+        <div class="card p-4 shadow-lg">
+            <h3 class="text-center mb-3">Login</h3>
 
-<!-- MAIN CONTENT -->
-<div class="container mt-4">
+            <?php
+            if (isset($_GET['msg'])) {
+                echo "<div class='alert alert-danger'>{$_GET['msg']}</div>";
+            }
+            ?>
 
-    <h3 class="mb-4 fw-bold">Menu Utama</h3>
+            <form action="auth/login.php" method="POST">
 
-    <div class="row g-4">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required placeholder="Masukkan email">
+                </div>
 
-        <!-- CARD LIHAT KAMAR -->
-        <div class="col-md-4">
-            <div class="card card-menu p-4 text-center h-100"
-                 onclick="window.location.href='kamar.php'">
-                <div class="icon-large">🛏</div>
-                <h5 class="mt-3 fw-bold">Lihat Kamar</h5>
-                <p class="text-muted">Cek seluruh kamar yang tersedia</p>
-            </div>
-        </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required placeholder="Masukkan password">
+                </div>
 
-        <!-- CARD RIWAYAT -->
-        <div class="col-md-4">
-            <div class="card card-menu p-4 text-center h-100"
-                 onclick="window.location.href='riwayat.php'">
-                <div class="icon-large">📜</div>
-                <h5 class="mt-3 fw-bold">Riwayat Reservasi</h5>
-                <p class="text-muted">Lihat histori pemesanan Anda</p>
-            </div>
-        </div>
+                <button type="submit" name="login" class="btn btn-primary w-100">Masuk</button>
 
-        <!-- CARD PROFIL -->
-        <div class="col-md-4">
-            <div class="card card-menu p-4 text-center h-100"
-                 onclick="window.location.href='profil.php'">
-                <div class="icon-large">👤</div>
-                <h5 class="mt-3 fw-bold">Profil Saya</h5>
-                <p class="text-muted">Lihat & perbarui data profil Anda</p>
-            </div>
+                <p class="text-center mt-3">
+                    Belum punya akun? <a href="auth/register.php">Daftar</a>
+                </p>
+            </form>
         </div>
 
     </div>
-
 </div>
 
 </body>
